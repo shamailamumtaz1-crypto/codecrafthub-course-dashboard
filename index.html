@@ -1,0 +1,1305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeCraftHub: Your Learning Management Platform</title>
+    <style>
+      /* ===== Reset & Base ===== */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #8B5CF6;
+        --primary-dark: #7C3AED;
+        --primary-light: #A78BFA;
+        --primary-lighter: #EDE9FE;
+        --success: #F59E0B;
+        --success-dark: #D97706;
+        --success-light: #FCD34D;
+        --danger: #EF4444;
+        --danger-dark: #DC2626;
+        --danger-light: #FEE2E2;
+        --bg: #F5F3FF;
+        --surface: #FFFFFF;
+        --text: #1F2937;
+        --text-muted: #6B7280;
+        --border: #E5E7EB;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --radius: 12px;
+        --radius-sm: 8px;
+        --transition: 0.2s ease;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      /* ===== Header ===== */
+      .header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(245, 158, 11, 0.15);
+        border-radius: 50%;
+        filter: blur(60px);
+      }
+
+      .header::after {
+        content: '';
+        position: absolute;
+        bottom: -40%;
+        left: -5%;
+        width: 250px;
+        height: 250px;
+        background: rgba(167, 139, 250, 0.2);
+        border-radius: 50%;
+        filter: blur(50px);
+      }
+
+      .header h1 {
+        color: #fff;
+        font-size: 1.75rem;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
+        letter-spacing: -0.02em;
+      }
+
+      .header p {
+        color: rgba(255, 255, 255, 0.85);
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        padding: 0.35rem 0.9rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        color: #fff;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header-badge .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success);
+        box-shadow: 0 0 8px var(--success);
+      }
+
+      /* ===== Layout ===== */
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+
+      /* ===== Stats Row ===== */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+        text-align: center;
+        transition: transform var(--transition), box-shadow var(--transition);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .stat-card .stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .stat-card .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 0.25rem;
+      }
+
+      .stat-card:nth-child(2) .stat-value { color: var(--text-muted); }
+      .stat-card:nth-child(3) .stat-value { color: var(--primary); }
+      .stat-card:nth-child(4) .stat-value { color: var(--success); }
+
+      /* ===== Form Section ===== */
+      .form-section {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 1.75rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+        margin-bottom: 2rem;
+      }
+
+      .form-section h2 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .form-section h2 .icon {
+        color: var(--primary);
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+
+      .form-field.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .form-field label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text);
+      }
+
+      .form-field label .required {
+        color: var(--danger);
+      }
+
+      .form-field input,
+      .form-field textarea,
+      .form-field select {
+        padding: 0.65rem 0.85rem;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 0.9rem;
+        font-family: inherit;
+        color: var(--text);
+        background: var(--surface);
+        transition: border-color var(--transition), box-shadow var(--transition);
+        outline: none;
+      }
+
+      .form-field input:focus,
+      .form-field textarea:focus,
+      .form-field select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+      }
+
+      .form-field textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+
+      .form-field .field-error {
+        font-size: 0.78rem;
+        color: var(--danger);
+        display: none;
+      }
+
+      .form-field.has-error input,
+      .form-field.has-error textarea,
+      .form-field.has-error select {
+        border-color: var(--danger);
+      }
+
+      .form-field.has-error .field-error {
+        display: block;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+        justify-content: flex-end;
+      }
+
+      /* ===== Buttons ===== */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.6rem 1.25rem;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 0.88rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all var(--transition);
+        white-space: nowrap;
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+      }
+
+      .btn-success {
+        background: var(--success);
+        color: #fff;
+      }
+
+      .btn-success:hover:not(:disabled) {
+        background: var(--success-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        color: #fff;
+      }
+
+      .btn-danger:hover:not(:disabled) {
+        background: var(--danger-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-muted);
+        border: 1.5px solid var(--border);
+      }
+
+      .btn-ghost:hover:not(:disabled) {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--primary-lighter);
+      }
+
+      .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.82rem;
+      }
+
+      /* ===== Course List ===== */
+      .courses-section h2 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .courses-section h2 .count {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        background: var(--primary-lighter);
+        padding: 0.2rem 0.7rem;
+        border-radius: 50px;
+      }
+
+      .course-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.25rem;
+      }
+
+      .course-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+        transition: transform var(--transition), box-shadow var(--transition);
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        animation: cardIn 0.3s ease;
+      }
+
+      @keyframes cardIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .course-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-light);
+      }
+
+      .course-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .course-card h3 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.3;
+      }
+
+      .course-card .course-id {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+
+      .course-card .description {
+        font-size: 0.88rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+        flex-grow: 1;
+      }
+
+      .course-card .meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+      }
+
+      .course-card .meta-row {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--text-muted);
+      }
+
+      .course-card .meta-row svg {
+        flex-shrink: 0;
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .status-Not\%20Started,
+      .status-not-started {
+        background: #F3F4F6;
+        color: #6B7280;
+      }
+
+      .status-In\%20Progress,
+      .status-in-progress {
+        background: var(--primary-lighter);
+        color: var(--primary-dark);
+      }
+
+      .status-Completed,
+      .status-completed {
+        background: #FEF3C7;
+        color: var(--success-dark);
+      }
+
+      .course-card .actions {
+        display: flex;
+        gap: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .course-card .actions .btn {
+        flex: 1;
+        justify-content: center;
+      }
+
+      /* ===== Loading Spinner ===== */
+      .spinner-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(245, 243, 255, 0.7);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--transition), visibility var(--transition);
+      }
+
+      .spinner-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .spinner-box {
+        background: var(--surface);
+        padding: 1.5rem 2rem;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .spinner {
+        width: 36px;
+        height: 36px;
+        border: 3.5px solid var(--primary-lighter);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+
+      .spinner-box span {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .inline-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+
+      /* ===== Toast Notifications ===== */
+      .toast-container {
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+
+      .toast {
+        background: var(--surface);
+        border-radius: var(--radius-sm);
+        padding: 0.9rem 1.2rem;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.88rem;
+        font-weight: 500;
+        min-width: 280px;
+        max-width: 380px;
+        animation: toastIn 0.3s ease;
+        border-left: 4px solid;
+      }
+
+      .toast.success {
+        border-left-color: var(--success);
+        color: var(--success-dark);
+      }
+
+      .toast.error {
+        border-left-color: var(--danger);
+        color: var(--danger-dark);
+      }
+
+      .toast.info {
+        border-left-color: var(--primary);
+        color: var(--primary-dark);
+      }
+
+      .toast.removing {
+        animation: toastOut 0.3s ease forwards;
+      }
+
+      @keyframes toastIn {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes toastOut {
+        to {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+      }
+
+      /* ===== Empty State ===== */
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1.5rem;
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 2px dashed var(--border);
+      }
+
+      .empty-state .empty-icon {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 1rem;
+        background: var(--primary-lighter);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .empty-state h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .empty-state p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      /* ===== Modal ===== */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(31, 41, 55, 0.5);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 998;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--transition), visibility var(--transition);
+        padding: 1rem;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 1.75rem;
+        width: 100%;
+        max-width: 520px;
+        box-shadow: var(--shadow-lg);
+        transform: scale(0.95);
+        transition: transform var(--transition);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-overlay.active .modal {
+        transform: scale(1);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+      }
+
+      .modal-header h2 {
+        font-size: 1.15rem;
+        font-weight: 600;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-muted);
+        padding: 0.3rem;
+        border-radius: var(--radius-sm);
+        transition: all var(--transition);
+        display: flex;
+      }
+
+      .modal-close:hover {
+        background: #F3F4F6;
+        color: var(--text);
+      }
+
+      .modal .form-actions {
+        margin-top: 1.5rem;
+      }
+
+      /* ===== Responsive ===== */
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 1.3rem;
+        }
+
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .course-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+          flex-direction: column-reverse;
+        }
+
+        .form-actions .btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .toast-container {
+          top: 1rem;
+          right: 1rem;
+          left: 1rem;
+        }
+
+        .toast {
+          min-width: auto;
+          max-width: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .stats {
+          grid-template-columns: 1fr 1fr;
+          gap: 0.6rem;
+        }
+
+        .stat-card {
+          padding: 0.9rem;
+        }
+
+        .stat-card .stat-value {
+          font-size: 1.3rem;
+        }
+
+        .container {
+          padding: 1.25rem 1rem;
+        }
+
+        .form-section,
+        .modal {
+          padding: 1.25rem;
+        }
+
+        .course-card .actions {
+          flex-direction: column;
+        }
+      }
+    </style>
+    <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-badge">
+        <span class="dot"></span>
+        <span>Learning Management System</span>
+      </div>
+      <h1>CodeCraftHub: Your Learning Management Platform</h1>
+      <p>Plan, track, and complete your learning journey</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+      <!-- Stats -->
+      <div class="stats" id="stats">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">Total Courses</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-not-started">0</div>
+          <div class="stat-label">Not Started</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-in-progress">0</div>
+          <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-completed">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+      </div>
+
+      <!-- Add Course Form -->
+      <section class="form-section">
+        <h2>
+          <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add New Course
+        </h2>
+        <form id="course-form" novalidate>
+          <div class="form-grid">
+            <div class="form-field full-width" id="field-name">
+              <label for="name">Course Name <span class="required">*</span></label>
+              <input type="text" id="name" name="name" placeholder="e.g., Introduction to Python" autocomplete="off" />
+              <span class="field-error">Course name is required</span>
+            </div>
+            <div class="form-field full-width" id="field-description">
+              <label for="description">Description <span class="required">*</span></label>
+              <textarea id="description" name="description" placeholder="Briefly describe what this course covers..."></textarea>
+              <span class="field-error">Description is required</span>
+            </div>
+            <div class="form-field" id="field-target_date">
+              <label for="target_date">Target Date <span class="required">*</span></label>
+              <input type="date" id="target_date" name="target_date" />
+              <span class="field-error">Target date is required</span>
+            </div>
+            <div class="form-field" id="field-status">
+              <label for="status">Status <span class="required">*</span></label>
+              <select id="status" name="status">
+                <option value="">Select status...</option>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+              <span class="field-error">Status is required</span>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" id="form-reset">Clear</button>
+            <button type="submit" class="btn btn-primary" id="form-submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Course
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Course List -->
+      <section class="courses-section">
+        <h2>
+          <span>Your Courses</span>
+          <span class="count" id="course-count">0 courses</span>
+        </h2>
+        <div id="course-list"></div>
+      </section>
+    </main>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="edit-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Edit Course</h2>
+          <button class="modal-close" id="modal-close" aria-label="Close modal">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <form id="edit-form" novalidate>
+          <input type="hidden" id="edit-id" />
+          <div class="form-grid">
+            <div class="form-field full-width" id="edit-field-name">
+              <label for="edit-name">Course Name <span class="required">*</span></label>
+              <input type="text" id="edit-name" name="name" />
+              <span class="field-error">Course name is required</span>
+            </div>
+            <div class="form-field full-width" id="edit-field-description">
+              <label for="edit-description">Description <span class="required">*</span></label>
+              <textarea id="edit-description" name="description"></textarea>
+              <span class="field-error">Description is required</span>
+            </div>
+            <div class="form-field" id="edit-field-target_date">
+              <label for="edit-target_date">Target Date <span class="required">*</span></label>
+              <input type="date" id="edit-target_date" name="target_date" />
+              <span class="field-error">Target date is required</span>
+            </div>
+            <div class="form-field" id="edit-field-status">
+              <label for="edit-status">Status <span class="required">*</span></label>
+              <select id="edit-status" name="status">
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+              <span class="field-error">Status is required</span>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" id="edit-cancel">Cancel</button>
+            <button type="submit" class="btn btn-success" id="edit-submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="spinner-overlay" id="spinner-overlay">
+      <div class="spinner-box">
+        <div class="spinner"></div>
+        <span id="spinner-text">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+      (function () {
+        'use strict';
+
+        // ===== Configuration =====
+        const COURSES_STORAGE_KEY = 'codecrafthub-courses';
+
+        // ===== DOM References =====
+        const courseForm = document.getElementById('course-form');
+        const courseList = document.getElementById('course-list');
+        const courseCount = document.getElementById('course-count');
+        const spinnerOverlay = document.getElementById('spinner-overlay');
+        const spinnerText = document.getElementById('spinner-text');
+        const toastContainer = document.getElementById('toast-container');
+        const editModal = document.getElementById('edit-modal');
+        const editForm = document.getElementById('edit-form');
+        const modalClose = document.getElementById('modal-close');
+        const editCancel = document.getElementById('edit-cancel');
+        const formReset = document.getElementById('form-reset');
+
+        let allCourses = [];
+
+        // ===== Utility Functions =====
+
+        function showSpinner(text) {
+          spinnerText.textContent = text || 'Loading...';
+          spinnerOverlay.classList.add('active');
+        }
+
+        function hideSpinner() {
+          spinnerOverlay.classList.remove('active');
+        }
+
+        function showToast(message, type) {
+          type = type || 'info';
+          var toast = document.createElement('div');
+          toast.className = 'toast ' + type;
+
+          var icons = {
+            success: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+            error: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+            info: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+          };
+
+          toast.innerHTML = icons[type] + '<span>' + escapeHtml(message) + '</span>';
+          toastContainer.appendChild(toast);
+
+          setTimeout(function () {
+            toast.classList.add('removing');
+            setTimeout(function () {
+              if (toast.parentNode) toast.parentNode.removeChild(toast);
+            }, 300);
+          }, 3500);
+        }
+
+        function escapeHtml(str) {
+          if (str === null || str === undefined) return '';
+          var div = document.createElement('div');
+          div.textContent = String(str);
+          return div.innerHTML;
+        }
+
+        function formatDate(dateStr) {
+          if (!dateStr) return '—';
+          var d = new Date(dateStr);
+          if (isNaN(d.getTime())) return escapeHtml(dateStr);
+          return d.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+        }
+
+        function statusClass(status) {
+          if (!status) return '';
+          return 'status-' + status.toLowerCase().replace(/\s+/g, '-');
+        }
+
+        function clearFieldErrors(form) {
+          var fields = form.querySelectorAll('.form-field.has-error');
+          fields.forEach(function (f) { f.classList.remove('has-error'); });
+        }
+
+        function validateForm(form, fieldIds) {
+          clearFieldErrors(form);
+          var valid = true;
+          fieldIds.forEach(function (id) {
+            var fieldWrapper = document.getElementById(id);
+            if (!fieldWrapper) return;
+            var input = fieldWrapper.querySelector('input, textarea, select');
+            if (!input) return;
+            if (!input.value || !input.value.trim()) {
+              fieldWrapper.classList.add('has-error');
+              valid = false;
+            }
+          });
+          return valid;
+        }
+
+        function getFormData(form) {
+          var name = form.querySelector('#name, #edit-name').value.trim();
+          var description = form.querySelector('#description, #edit-description').value.trim();
+          var targetDate = form.querySelector('#target_date, #edit-target_date').value;
+          var status = form.querySelector('#status, #edit-status').value;
+          return {
+            name: name,
+            description: description,
+            target_date: targetDate,
+            status: status
+          };
+        }
+
+        // ===== Stats =====
+
+        function updateStats() {
+          var total = allCourses.length;
+          var notStarted = 0;
+          var inProgress = 0;
+          var completed = 0;
+
+          allCourses.forEach(function (c) {
+            if (c.status === 'Not Started') notStarted++;
+            else if (c.status === 'In Progress') inProgress++;
+            else if (c.status === 'Completed') completed++;
+          });
+
+          document.getElementById('stat-total').textContent = total;
+          document.getElementById('stat-not-started').textContent = notStarted;
+          document.getElementById('stat-in-progress').textContent = inProgress;
+          document.getElementById('stat-completed').textContent = completed;
+          courseCount.textContent = total + (total === 1 ? ' course' : ' courses');
+        }
+
+        // ===== Rendering =====
+
+        function renderEmptyState() {
+          courseList.innerHTML =
+            '<div class="empty-state">' +
+              '<div class="empty-icon">' +
+                '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>' +
+              '</div>' +
+              '<h3>No Courses Yet</h3>' +
+              '<p>Add your first course using the form above to get started.</p>' +
+            '</div>';
+        }
+
+        function renderCourses() {
+          if (!allCourses.length) {
+            renderEmptyState();
+            return;
+          }
+
+          var html = '<div class="course-grid">';
+          allCourses.forEach(function (course) {
+            html +=
+              '<div class="course-card" data-id="' + escapeHtml(course.id) + '">' +
+                '<div class="course-card-header">' +
+                  '<div>' +
+                    '<h3>' + escapeHtml(course.name) + '</h3>' +
+                    '<div class="course-id">ID: ' + escapeHtml(course.id) + '</div>' +
+                  '</div>' +
+                  '<span class="status-badge ' + statusClass(course.status) + '">' + escapeHtml(course.status || '—') + '</span>' +
+                '</div>' +
+                '<div class="description">' + escapeHtml(course.description || '') + '</div>' +
+                '<div class="meta">' +
+                  '<div class="meta-row">' +
+                    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                    '<span>Target: ' + formatDate(course.target_date) + '</span>' +
+                  '</div>' +
+                  '<div class="meta-row">' +
+                    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+                    '<span>Created: ' + formatDate(course.created_at) + '</span>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="actions">' +
+                  '<button class="btn btn-ghost btn-sm" onclick="LMS.openEditModal(' + JSON.stringify(course.id) + ')">' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+                    'Edit' +
+                  '</button>' +
+                  '<button class="btn btn-danger btn-sm" onclick="LMS.deleteCourse(' + JSON.stringify(course.id) + ')">' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+                    'Remove' +
+                  '</button>' +
+                '</div>' +
+              '</div>';
+          });
+          html += '</div>';
+          courseList.innerHTML = html;
+        }
+
+        // ===== Course Storage =====
+
+        async function fetchCourses() {
+          showSpinner('Fetching courses...');
+          try {
+            var storedCourses = localStorage.getItem(COURSES_STORAGE_KEY);
+            var data = storedCourses ? JSON.parse(storedCourses) : [];
+            if (!Array.isArray(data)) throw new Error('Saved course data is invalid.');
+            allCourses = data;
+            renderCourses();
+            updateStats();
+            showToast(allCourses.length + ' course' + (allCourses.length === 1 ? '' : 's') + ' loaded', 'success');
+          } catch (err) {
+            allCourses = [];
+            renderEmptyState();
+            updateStats();
+            showToast('Could not load courses. ' + (err.message || 'Please check your connection.'), 'error');
+          } finally {
+            hideSpinner();
+          }
+        }
+
+        async function createCourse(payload) {
+          showSpinner('Creating course...');
+          try {
+            var created = Object.assign({
+              id: window.crypto && typeof window.crypto.randomUUID === 'function'
+                ? window.crypto.randomUUID()
+                : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2),
+              created_at: new Date().toISOString()
+            }, payload);
+            var updatedCourses = allCourses.concat(created);
+            localStorage.setItem(COURSES_STORAGE_KEY, JSON.stringify(updatedCourses));
+            allCourses = updatedCourses;
+            renderCourses();
+            updateStats();
+            showToast('Course "' + created.name + '" added successfully', 'success');
+            return true;
+          } catch (err) {
+            showToast('Could not create course. ' + (err.message || 'Please try again.'), 'error');
+            return false;
+          } finally {
+            hideSpinner();
+          }
+        }
+
+        async function updateCourse(id, payload) {
+          showSpinner('Updating course...');
+          try {
+            var idx = allCourses.findIndex(function (c) {
+              return String(c.id) === String(id);
+            });
+            if (idx === -1) throw new Error('Course not found');
+            var updated = Object.assign({}, allCourses[idx], payload);
+            var updatedCourses = allCourses.slice();
+            updatedCourses[idx] = updated;
+            localStorage.setItem(COURSES_STORAGE_KEY, JSON.stringify(updatedCourses));
+            allCourses = updatedCourses;
+            renderCourses();
+            updateStats();
+            showToast('Course updated successfully', 'success');
+            return true;
+          } catch (err) {
+            showToast('Could not update course. ' + (err.message || 'Please try again.'), 'error');
+            return false;
+          } finally {
+            hideSpinner();
+          }
+        }
+
+        async function deleteCourse(id) {
+          showSpinner('Deleting course...');
+          try {
+            var updatedCourses = allCourses.filter(function (c) {
+              return String(c.id) !== String(id);
+            });
+            if (updatedCourses.length === allCourses.length) throw new Error('Course not found');
+            localStorage.setItem(COURSES_STORAGE_KEY, JSON.stringify(updatedCourses));
+            allCourses = updatedCourses;
+            renderCourses();
+            updateStats();
+            showToast('Course deleted successfully', 'success');
+          } catch (err) {
+            showToast('Could not delete course. ' + (err.message || 'Please try again.'), 'error');
+          } finally {
+            hideSpinner();
+          }
+        }
+
+        // ===== Modal =====
+
+        function openEditModal(id) {
+          var course = allCourses.find(function (c) {
+            return String(c.id) === String(id);
+          });
+          if (!course) {
+            showToast('Course not found', 'error');
+            return;
+          }
+
+          document.getElementById('edit-id').value = course.id;
+          document.getElementById('edit-name').value = course.name || '';
+          document.getElementById('edit-description').value = course.description || '';
+          document.getElementById('edit-target_date').value = course.target_date || '';
+          document.getElementById('edit-status').value = course.status || 'Not Started';
+
+          clearFieldErrors(editForm);
+          editModal.classList.add('active');
+          document.getElementById('edit-name').focus();
+        }
+
+        function closeEditModal() {
+          editModal.classList.remove('active');
+          clearFieldErrors(editForm);
+        }
+
+        // ===== Event Handlers =====
+
+        courseForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          var fieldIds = ['field-name', 'field-description', 'field-target_date', 'field-status'];
+          if (!validateForm(courseForm, fieldIds)) {
+            showToast('Please fill in all required fields', 'error');
+            return;
+          }
+
+          var payload = getFormData(courseForm);
+          var success = await createCourse(payload);
+          if (success) {
+            courseForm.reset();
+          }
+        });
+
+        formReset.addEventListener('click', function () {
+          courseForm.reset();
+          clearFieldErrors(courseForm);
+        });
+
+        editForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          var fieldIds = ['edit-field-name', 'edit-field-description', 'edit-field-target_date', 'edit-field-status'];
+          if (!validateForm(editForm, fieldIds)) {
+            showToast('Please fill in all required fields', 'error');
+            return;
+          }
+
+          var id = document.getElementById('edit-id').value;
+          var payload = {
+            name: document.getElementById('edit-name').value.trim(),
+            description: document.getElementById('edit-description').value.trim(),
+            target_date: document.getElementById('edit-target_date').value,
+            status: document.getElementById('edit-status').value
+          };
+
+          var success = await updateCourse(id, payload);
+          if (success) {
+            closeEditModal();
+          }
+        });
+
+        modalClose.addEventListener('click', closeEditModal);
+        editCancel.addEventListener('click', closeEditModal);
+
+        editModal.addEventListener('click', function (e) {
+          if (e.target === editModal) closeEditModal();
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && editModal.classList.contains('active')) {
+            closeEditModal();
+          }
+        });
+
+        // ===== Expose for inline handlers =====
+        window.LMS = {
+          openEditModal: openEditModal,
+          deleteCourse: deleteCourse
+        };
+
+        // ===== Init =====
+        fetchCourses();
+      })();
+    </script>
+  </body>
+</html>

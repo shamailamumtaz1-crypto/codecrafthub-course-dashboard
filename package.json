@@ -1,0 +1,30 @@
+{
+  "name": "codecrafthub",
+  "version": "1.0.0",
+  "description": "Personal learning goal tracker API - A simple REST API to track courses you want to learn",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [
+    "learning",
+    "courses",
+    "api",
+    "rest",
+    "express",
+    "tracker"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
